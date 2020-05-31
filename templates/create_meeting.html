@@ -7,14 +7,14 @@
       {% include 'navbar.html' %}
         <p>Your overlap in free times</p>
         <table>
-            {% for overlap in over %}
+            {% for overlap in range(olength) %}
             <tr>
-                <td>{{ overlap[0] }}</td>
-                <td>{{ overlap[1] }}</td>
+                <td>{{ overs[overlap][0] }}</td>
+                <td>{{ overs[overlap][1] }}</td>
                 <td>
                     <form action="/create_meeting" method="POST">
-                      <input type="text" name="user" value="{{ overlap[0] }}" hidden>
-                      <input type="text" name="time" value="{{ overlap[1] }}" hidden>
+                      <input type="text" name="user" value="{{ over[overlap][0] }}" hidden>
+                      <input type="text" name="time" value="{{ over[overlap][1] }}" hidden>
                       <input type=submit value="Create">
                     </form>
                 </td>
@@ -26,6 +26,23 @@
           <input type="text" name="usernames" placeholder="Commas separated usernames">
           <input type=submit>
         </form>
+        {% if gover %}
+        <p>Your group overlap in free times</p>
+        <table>
+            {% for goverlap in range(glength) %}
+            <tr>
+                <td>{{ govers[goverlap] }}</td>
+                <td>
+                    <form action="/create_meeting" method="POST">
+                      <input type="text" name="users" value="{{ users }}" hidden>
+                      <input type="text" name="gtime" value="{{ gover[goverlap] }}" hidden>
+                      <input type=submit value="Create">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
 	</div>
   </body>
 </html>

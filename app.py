@@ -12,7 +12,6 @@ def get_username():
 get_bin = lambda x, n: format(x, 'b').zfill(n)
 
 def parse_time(string):
-    print(len(string))
     day = 0
     hour = 0
     half = 0
@@ -45,6 +44,30 @@ def parse_time(string):
 
             prev = day
     return times
+
+def parse_stime(num):
+    day = int(num / 48)
+    hour = int(num % 24)
+    half = int(num % 2)
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    bruh = str(hour*100+half*30)
+    while len(bruh) < 4: bruh = "0"+bruh
+    time = days[day]+" "+bruh+" - "
+    pday = day
+    half += 1
+    if half == 2:
+        half = 0
+        hour += 1
+        if hour == 24:
+            hour = 0
+            day += 1
+            if day == 7:
+                day = 0
+    if pday != day: time += days[day]
+    bruh = str(hour*100+half*30)
+    while len(bruh) < 4: bruh = "0"+bruh
+    time += " "+bruh
+    return time
 
 
 @app.route("/")
@@ -165,23 +188,46 @@ def create_meeting():
         return redirect(url_for("login"))
 
     over = db.findoverlaps(username)
-    print("Hello",over)   
     overs = []
-
     for i in range(len(over)):
         overs.append(list(over[i]))
-        bin = get_bin(over[i][1], 336)
-        print("hello2",bin)
-        overs[i][1] = ", ".join(parse_time(bin))
-    
+        overs[i][1] = parse_stime(over[i][1])
+
+    olength = len(over)
     if request.method == "GET":
-        return render_template("create_meeting.html", over=overs, username=username)
+        return render_template("create_meeting.html", overs=overs, over=over, olength=olength, username=username)
     else:
-        user = request.form["user"]
-        time = request.form["time"]
-        
-        db.creatependingmeeting([user], time)
-        return render_template("create_meeting.html", over=overs, username=username)
+        if "user" in request.form:
+            user = request.form["user"]
+            time = request.form["time"]
+            db.creatependingmeeting([user], time)
+            return render_template("create_meeting.html", overs=overs, over=over, olength=olength, username=username)
+        else:
+            if "users" in request.form:
+                users = request.form["users"].split(",")
+                gtime = request.form["gtime"]
+                for i in range(len(users)): users[i] = users[i].strip(" ")
+
+                db.creatependingmeeting(users, gtime)                
+
+                gover = db.findoverlaps2(users)
+                govers = []
+                for i in range(len(gover)):
+                    govers.append(parse_stime(gover[i]))
+            
+                glength = len(govers)
+                return render_template("create_meeting.html", overs=overs, over=over, olength=olength, gover=gover, govers=govers, username=username, glength=glength, users=request.form["users"])
+            else:
+                users = request.form["usernames"].split(",")
+                for i in range(len(users)): users[i] = users[i].strip(" ")
+
+                gover = db.findoverlaps2(users)
+                govers = []
+                for i in range(len(gover)):
+                    govers.append(parse_stime(gover[i]))
+            
+                glength = len(govers)
+                return render_template("create_meeting.html", overs=overs, over=over, olength=olength, gover=gover, govers=govers, username=username, glength=glength, users=request.form["usernames"])
 
 
 @app.route("/friends", methods=["GET", "POST"])
@@ -209,11 +255,7 @@ def friends():
         rfriendl = db.getpfren(username)
         return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, error=error)
 
-#db.testallfunctions()
-
+db.testallfunctions()
 
 if __name__ == "__main__":
-    import generate_test_data as gtd
-    gtd.run()
-
     app.run(debug=True)
