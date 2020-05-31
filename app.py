@@ -173,7 +173,6 @@ def meetings():
 
     pmeetings = db.getpendingmeeting(username)
     cmeetings = db.getconfirmedmeeting(username)
-
     if pmeetings != 0:
         for i in range(len(pmeetings)):
             pmeetings[i][2] = ", ".join(parse_time(pmeetings[i][2]))
