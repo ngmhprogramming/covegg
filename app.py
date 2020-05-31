@@ -12,7 +12,8 @@ def index():
     username = get_username()
     if username:
         return render_template("index.html", username=username)
-    return redirect(url_for("login"))
+    else:
+        return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -41,10 +42,17 @@ def signup():
     else:
         username = request.form["username"]
         password = request.form["password"]
-        if username is "":
+        pnumber = request.form["pnumber"]
+        email = request.form["email"]
+
+        if username == "":
             return render_template("signup.html", error="No Username Specified")
-        if password is "":
+        if password == "":
             return render_template("signup.html", error="No Password Specified")
+        if pnumber == "":
+            return render_template("signup.html", error="No Phone Number Specified")
+        if email == "":
+            return render_template("signup.html", error="No Email Specified")
 
         password = hash(password)
         #user = User(type_no, location, name, password)
@@ -52,3 +60,5 @@ def signup():
         #db_session.commit()
         return redirect(url_for("login"))
 
+if __name__ == "__main__":
+    app.run(debug=True)
