@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <body>
+	<div class="main">
+        <p>Your pending meetings</p>
+        <table>
+            {% for meeting in pmeetings %}
+            <tr>
+                <td>{{ meeting[0] }}</td>
+                <td>
+                    {% for user in meeting[1] %}
+                    {{ user }}
+                    {% endfor %}
+                </td>
+                <td><p>{{ meeting[2] }}</p></td>
+                <td>
+                    <form action="/meetings" method="POST">
+                        <input type="text" name="meetingid" value="{ meeting[0] }}" hidden>
+                        <input type=submit value="Accept">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <p>Your confirmed meetings</p>
+        <table>
+            {% for meeting in cmeetings %}
+            <tr>
+                <td>{{ meeting[0] }}</td>
+                <td>
+                    {% for user in meeting[1] %}
+                    {{ user }}
+                    {% endfor %}
+                </td>
+                <td><p>{{ meeting[2] }}</p></td>
+            </tr>
+            {% endfor %}
+        </table>
+	</div>
+  </body>
+</html>
