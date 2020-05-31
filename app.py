@@ -255,7 +255,9 @@ def friends():
         rfriendl = db.getpfren(username)
         return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, error=error)
 
-db.testallfunctions()
+#db.testallfunctions()
 
 if __name__ == "__main__":
+    import generate_test_data as gtd
+    gtd.run()
     app.run(debug=True)
