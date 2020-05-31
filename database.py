@@ -29,9 +29,7 @@ def testallfunctions():
     cursorObj.execute(
         "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
     cursorObj.execute(
-        "CREATE TABLE meet(id text PRIMARY KEY, users text, time text, messages text, confirmed integer)")
-    con.commit()
-    con.close()
+        "CREATE TABLE meet(id integer PRIMARY KEY autoincrement, users text, time text, messages text, confirmed integer)")
     print(register("HTY", 70707070, "lol@lol.com", "passworld123"))
     print(register("NGMH", 53180080, "imgay@lol.com", "iloverubikcube"))
     print(register("HTY", 70707070, "lol@lol.com", "passworld123"))
@@ -41,14 +39,25 @@ def testallfunctions():
     print(confirmfren("NGMH", "HTY", True))
     print(getfren("NGMH"))
     print(getfren("HTY"))
-    print(deletfren("NGMH", "HTY"))
-    print(getfren("NGMH"))
-    print(getfren("HTY"))
-    s = "0"*335+"1"
-    print(editschedule("NGMH", s))
-    print(editschedule("HTY", s))
+    # print(deletfren("NGMH", "HTY"))
+    # print(getfren("NGMH"))
+    # print(getfren("HTY"))
+    print(editschedule("NGMH", "0"*335+"1"))
+    print(editschedule("HTY", "0"*335+"1"))
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
+    print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+    print(confirmmeeting(1))
+    print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+    print(cancelmeeting(1))
+    cursorObj.execute('drop table if exists users')
+    cursorObj.execute('drop table if exists meet')
+    cursorObj.execute(
+        "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
+    cursorObj.execute(
+        "CREATE TABLE meet(id integer PRIMARY KEY autoincrement, users text, time text, messages text, confirmed integer)")
+    con.commit()
+    con.close()
 
 
 def register(username, phone, email, password):
@@ -268,21 +277,90 @@ def findoverlaps(username):
         return 0
 
 
-def createmeeting(): return
-
-'''
-    input: list of usernames, timeframe (number from 0 to 336)
+def creatependingmeeting(usernames, time):
+    '''
+    input: list of usernames, another giant binary string
     output: 1 (success) or 0 (failure)
     '''
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        stryng = ",".join(usernames)
+        cursorObj.execute(
+            "INSERT INTO meet (users, time, messages, confirmed) VALUES('" + stryng + "','" + time + "','',0)")
+        con.commit()
+        cursorObj.execute(
+            "SELECT id FROM meet where users = '" + stryng + "' and time = '" + time + "'")
+        id = cursorObj.fetchall()[0][0]
+        for u in usernames:
+            cursorObj.execute(
+                "SELECT meetings FROM users where username = '" + u + "'")
+            meeting = cursorObj.fetchall()[0][0] + "," + str(id)
+            cursorObj.execute("UPDATE users SET meetings = '" +
+                              meeting + "' where username = '" + u + "'")
+        con.commit()
+        con.close()
+        return 1
+    except Error as e:
+        print(e)
+        return 0
 
 
-def confirmmeeting(): return
+def confirmmeeting(id):
+    '''
+    sets meeting as confirmed
+    input: meeting ID
+    '''
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        cursorObj.execute(
+            "UPDATE meet SET confirmed = 1 where id = " + str(id))
+        con.commit()
+        con.close()
+        return 1
+    except Error as e:
+        print(e)
+        return 0
 
 
-def cancelmeeting(): return
+def cancelmeeting(id):
+    '''
+    delete meeting from db
+    input: meeting ID
+    '''
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        cursorObj.execute(
+            "DELETE FROM meet where id = " + str(id))
+        con.commit()
+        con.close()
+        return 1
+    except Error as e:
+        print(e)
+        return 0
 
 
-def msgmeeting(): return
+def addmeetingmsg(id, username, message):
+    try:
+        cursorObj.execute(
+            "SELECT messages FROM meet where id =" + id + "'")
+        messages = cursorObj.fetchall()[0][0]+","+username+":"+message
+        con.commit()
+        con.close()
+    except Error as e:
+        print(e)
+        return 0
+
+
+def getmeetingmsg(id, username): return
+
+
+def getpendingmeeting(username): return
+
+
+def getconfirmedmeeting(username): return
 
 
 # testallfunctions()
