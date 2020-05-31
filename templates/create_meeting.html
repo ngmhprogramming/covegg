@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <body>
+	<div class="main">
+        <p>Your overlap in free times</p>
+        <table>
+            {% for overlap in over %}
+            <tr>
+                <td>{{ overlap[0] }}</td>
+                <td>{{ overlap[1] }}</td>
+                <td>
+                    <form action="/create_meeting" method="POST">
+                      <input type="text" name="user" value="{{ overlap[0] }}" hidden>
+                      <input type="text" name="time" value="{{ overlap[1] }}" hidden>
+                        <input type=submit value="Create">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+	</div>
+  </body>
+</html>
