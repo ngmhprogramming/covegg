@@ -176,11 +176,16 @@ def create_meeting():
     if request.method == "GET":
         return render_template("create_meeting.html", over=overs, username=username)
     else:
-        user = request.form["user"]
-        time = request.form["time"]
-        
-        db.creatependingmeeting([user], time)
-        return render_template("create_meeting.html", over=overs, username=username)
+        if "user" in request.form:
+            user = request.form["user"]
+            time = request.form["time"]
+            db.creatependingmeeting([user], time)
+        else:
+            users = request.form["usernames"].split(",")
+            for i in range(len(users)): users[i] = users[i].strip(" ")
+
+            govers = db.findoverlaps2(users)
+            return render_template("create_meeting.html", over=overs, govers=govers, username=username)
 
 
 @app.route("/friends", methods=["GET", "POST"])
