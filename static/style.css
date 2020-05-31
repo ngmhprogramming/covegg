@@ -35,6 +35,10 @@
   margin: 5px;
 }
 
+img {
+  margin: 10px;
+}
+
 .whatever{
     background-color: white;
     border: solid 0.5px #DCDCDC;
