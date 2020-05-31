@@ -211,7 +211,7 @@ def create_meeting():
         if "user" in request.form:
             user = request.form["user"]
             time = request.form["time"]
-            db.creatependingmeeting([user], time)
+            db.creatependingmeeting([user], int(time))
             return render_template("create_meeting.html", overs=overs, over=over, olength=olength, username=username)
         else:
             if "users" in request.form:
@@ -219,7 +219,7 @@ def create_meeting():
                 gtime = request.form["gtime"]
                 for i in range(len(users)): users[i] = users[i].strip(" ")
 
-                db.creatependingmeeting(users, gtime)                
+                db.creatependingmeeting(users, int(gtime))                
 
                 gover = db.findoverlaps2(users)
                 govers = []
