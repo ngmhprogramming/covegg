@@ -45,15 +45,6 @@ def signup():
         pnumber = request.form["pnumber"]
         email = request.form["email"]
 
-        if username == "":
-            return render_template("signup.html", error="No Username Specified")
-        if password == "":
-            return render_template("signup.html", error="No Password Specified")
-        if pnumber == "":
-            return render_template("signup.html", error="No Phone Number Specified")
-        if email == "":
-            return render_template("signup.html", error="No Email Specified")
-
         password = hash(password)
         #user = User(type_no, location, name, password)
         #db_session.add(user)
