@@ -25,6 +25,7 @@ def login():
         #user = db_session.query(User).filter_by(name=name).first()
         #if user is None or user.password != hash(password):
         #    return render_template("login.html", error="Invalid Username or Password")
+
         session["username"] = username
         return redirect(url_for("index"))
 
@@ -44,7 +45,8 @@ def signup():
             return render_template("signup.html", error="No Username Specified")
         if password is "":
             return render_template("signup.html", error="No Password Specified")
-        #password = hash(password)
+
+        password = hash(password)
         #user = User(type_no, location, name, password)
         #db_session.add(user)
         #db_session.commit()
