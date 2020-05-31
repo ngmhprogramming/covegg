@@ -164,7 +164,7 @@ def confirmfren(u2, u1, accepted):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
