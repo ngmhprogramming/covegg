@@ -17,7 +17,7 @@ from sqlite3 import Error
 - Users involved in meeting
 - Time Period
 - Messages
-- Pending or Not
+- Comfirmed or not
 '''
 
 
@@ -29,7 +29,7 @@ def testallfunctions():
     cursorObj.execute(
         "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
     cursorObj.execute(
-        "CREATE TABLE meet(id integer PRIMARY KEY autoincrement, users text, time text, messages text, confirmed integer)")
+        "CREATE TABLE meet(id integer PRIMARY KEY autoincrement, users text, time text, messages text, confirmed text)")
     print(register("HTY", 70707070, "lol@lol.com", "pp"))
     print(register("NGMH", 53180080, "imgay@lol.com", "pp"))
     print(register("HTY", 70707070, "lol@lol.com", "pp"))
@@ -49,7 +49,8 @@ def testallfunctions():
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
     print(cancelmeeting(1))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
-    print(confirmmeeting(2))
+    print(confirmmeeting("HTY", 2))
+    print(confirmmeeting("NGMH", 2))
     print(getpendingmeeting("HTY"))
     print(getconfirmedmeeting("HTY"))
     #cursorObj.execute('drop table if exists users')
@@ -75,7 +76,7 @@ def register(username, phone, email, password):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -92,7 +93,7 @@ def login(username, password):
         pw = cursorObj.fetchall()[0][0]
         con.close()
         return 1 if password == pw else 0
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -117,7 +118,7 @@ def requestfren(u1, u2):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -150,7 +151,7 @@ def confirmfren(u2, u1, accepted):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -177,7 +178,7 @@ def deletfren(u1, u2):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -229,7 +230,7 @@ def editschedule(username, schedule):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -246,7 +247,7 @@ def getschedule(username):
         sched = cursorObj.fetchall()[0][0]
         con.close()
         return sched
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -274,7 +275,7 @@ def findoverlaps(username):
                 if schedule2[i] == schedule[i] and int(schedule[i]):
                     lyst.append((f, i))
         return lyst
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -297,7 +298,7 @@ def findoverlaps2(usernames):
             if 0 not in [schedule[i] for schedule in schedules]:
                 lyst.append(i)
         return i
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -311,8 +312,9 @@ def creatependingmeeting(usernames, time):
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
         stryng = ",".join(usernames)
+        stryng2 = "0"*len(usernames)
         cursorObj.execute(
-            "INSERT INTO meet (users, time, messages, confirmed) VALUES('" + stryng + "','" + time + "','',0)")
+            "INSERT INTO meet (users, time, messages, confirmed) VALUES('" + stryng + "','" + time + "','','" + stryng2 + "')")
         con.commit()
         cursorObj.execute(
             "SELECT id FROM meet where users = '" + stryng + "' and time = '" + time + "'")
@@ -326,25 +328,37 @@ def creatependingmeeting(usernames, time):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
 
-def confirmmeeting(id):
+def confirmmeeting(username, id):
     '''
     sets meeting as confirmed
-    input: meeting ID
+    input: username, meeting ID
     '''
     try:
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
         cursorObj.execute(
-            "UPDATE meet SET confirmed = 1 where id = " + str(id))
+            "SELECT users FROM meet where id = " + str(id))
+        users = cursorObj.fetchall()[0][0].split(",")
+        cursorObj.execute(
+            "SELECT confirmed FROM meet where id = " + str(id))
+        confirmed = cursorObj.fetchall()[0][0]
+        newstring = ""
+        for i in range(len(users)):
+            if users[i] == username:
+                newstring += "1"
+            else:
+                newstring += confirmed[i]
+        cursorObj.execute(
+            "UPDATE meet SET confirmed = '" + newstring + "' where id = " + str(id))
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -373,7 +387,7 @@ def cancelmeeting(id):
         con.commit()
         con.close()
         return 1
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -391,7 +405,7 @@ def addmeetingmsg(id, username, message):
             "UPDATE meet SET messages ='" + messages + "' where id = " + str(id))
         con.commit()
         con.close()
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -405,7 +419,7 @@ def getmeetingmsg(id):
         messages = cursorObj.fetchall()[0][0]+","+username+":"+message
         return [i.split(":") for i in messages.split(",")]
         con.close()
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -418,18 +432,18 @@ def getpendingmeeting(username):
         cursorObj.execute(
             "SELECT meetings FROM users where username ='" + username + "'")
         a = cursorObj.fetchall()[0][0]
-        print(a.split(",")[1:])
         for id in a.split(",")[1:]:
             cursorObj.execute(
-                "SELECT * FROM meet where confirmed = 0 and id =" + id)
+                "SELECT * FROM meet where id = " + id)
             ans = cursorObj.fetchall()
             if ans:
                 meetings.append(ans[0])
         final = []
         for meeting in meetings:
-            final.append([meeting[0], meeting[1].split(","), meeting[2]])
+            if "0" in meeting[4]:
+                final.append([meeting[0], meeting[1].split(","), meeting[2]])
         return final
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
@@ -442,18 +456,18 @@ def getconfirmedmeeting(username):
         cursorObj.execute(
             "SELECT meetings FROM users where username ='" + username + "'")
         a = cursorObj.fetchall()[0][0]
-        print(a.split(",")[1:])
         for id in a.split(",")[1:]:
             cursorObj.execute(
-                "SELECT * FROM meet where confirmed = 1 and id =" + id)
+                "SELECT * FROM meet where id =" + id)
             ans = cursorObj.fetchall()
             if ans:
                 meetings.append(ans[0])
         final = []
         for meeting in meetings:
-            final.append([meeting[0], meeting[1].split(","), meeting[2]])
+            if "0" not in meeting[4]:
+                final.append([meeting[0], meeting[1].split(","), meeting[2]])
         return final
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 
