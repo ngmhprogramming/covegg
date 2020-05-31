@@ -28,7 +28,7 @@
 						    	<center><span class="timelabel"><b>AM</b></span></center>
 							    
 							    {% for i in range(amhourlist|length) %}
-							    <input type="checkbox" name="{{day}}Group" value="{{i}}" id="{{ day + i|string }}" checked/>
+							    <input type="checkbox" name="{{day}}Group" value="{{i}}" id="{{ day + i|string }}"/>
 							    <label class="whatever p-2" for="{{ day + i|string }}">{{amhourlist[i]}}</label>
 							    {% endfor %}
 							</div>

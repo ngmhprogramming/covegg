@@ -94,9 +94,12 @@ def requestfren(u1, u2):
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
         cursorObj.execute(
+            "SELECT friends FROM users where username = '" + u2 + "'")
+        friends = cursorObj.fetchall()[0][0]
+        cursorObj.execute(
             "SELECT pfriends FROM users where username = '" + u2 + "'")
         pfriends = cursorObj.fetchall()[0][0]
-        if u1 not in pfriends:
+        if u1 not in pfriends and u1 not in friends:
             pfriends += "," + u1
         cursorObj.execute("UPDATE users SET pfriends = '" +
                           pfriends + "' where username = '" + u2 + "'")
