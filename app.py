@@ -29,10 +29,10 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         
-        #if login():
-        session["username"] = username
-        return redirect(url_for("index"))
-        #return render_template("login.html", error="Invalid Username or Password")
+        if login(username, password):
+            session["username"] = username
+            return redirect(url_for("index"))
+        return render_template("login.html", error="Invalid Username or Password")
 
 @app.route("/logout")
 def logout():
@@ -54,7 +54,7 @@ def signup():
         email = request.form["email"]
 
         password = hash(password)
-        if register():
+        if register(username, pnumber, email, password):
             return redirect(url_for("login"))
         return render_template("signup.html", error="Username taken!")
 
