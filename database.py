@@ -30,9 +30,9 @@ def testallfunctions():
         "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
     cursorObj.execute(
         "CREATE TABLE meet(id integer PRIMARY KEY autoincrement, users text, time text, messages text, confirmed integer)")
-    print(register("HTY", 70707070, "lol@lol.com", "passworld123"))
-    print(register("NGMH", 53180080, "imgay@lol.com", "iloverubikcube"))
-    print(register("HTY", 70707070, "lol@lol.com", "passworld123"))
+    print(register("HTY", 70707070, "lol@lol.com", "pp"))
+    print(register("NGMH", 53180080, "imgay@lol.com", "pp"))
+    print(register("HTY", 70707070, "lol@lol.com", "pp"))
     print(login("HTY", "passworld123"))
     print(login("HTY", "password123"))
     print(requestfren("HTY", "NGMH"))
@@ -274,6 +274,29 @@ def findoverlaps(username):
                 if schedule2[i] == schedule[i] and int(schedule[i]):
                     lyst.append((f, i))
         return lyst
+    except Error as e:
+        print(e)
+        return 0
+
+
+def findoverlaps2(usernames):
+    '''find scheduling overlaps w all friends of a user
+    input: list of usernames
+    output: [(username, time), ...]
+    '''
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        schedules = []
+        for u in usernames:
+            cursorObj.execute(
+                "SELECT schedule FROM users where username = '" + username + "'")
+            schedules.append(cursorObj.fetchall()[0][0])
+
+        for i in range(336):
+            if 0 not in [schedule[i] for schedule in schedules]:
+                lyst.append(i)
+        return i
     except Error as e:
         print(e)
         return 0
