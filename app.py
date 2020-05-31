@@ -6,13 +6,14 @@ app = Flask(__name__)
 app.secret_key = "shellshock69420"
 
 def get_username():
+    return "Noodle"
+
     if "username" in session: return session["username"]
     return False
 
 @app.route("/")
 def index():
-    #username = get_username()
-    username = True
+    username = get_username()
     if username:
         return render_template("index.html", username=username)
     else:
@@ -20,6 +21,10 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    username = get_username()
+    if username:
+        return redirect(url_for("index"))
+
     if request.method == "GET":
         return render_template("login.html")
     else:
@@ -38,6 +43,10 @@ def logout():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    username = get_username()
+    if username:
+        return redirect(url_for("index"))
+
     if request.method == "GET":
         return render_template("signup.html")
     else:
@@ -53,23 +62,47 @@ def signup():
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
+    username = get_username()
+    if not username:
+        return redirect(url_for("login"))
+
     if request.method == "GET":
         return render_template("profile.html")
     else:
         return render_template("profile.html")
 
-
-@app.route("/schedule")
+@app.route("/schedule", methods=["GET", "POST"])
 def schedule():
-    pass
+    username = get_username()
+    if not username:
+        return redirect(url_for("login"))
 
-@app.route("/meet")
-def meet_new_ppl():
-    pass
+    if request.method == "GET":
+        return render_template("schedule.html")
+    else:
+        return render_template("schedule.html")
 
-@app.route("/friends")
-def friend_groups():
-    pass
+@app.route("/meetings", methods=["GET", "POST"])
+def meetings():
+    username = get_username()
+    if not username:
+        return redirect(url_for("login"))
+
+    if request.method == "GET":
+        return render_template("meetings.html")
+    else:
+        return render_template("meetings.html")
+
+@app.route("/friends", methods=["GET", "POST"])
+def friends():
+    username = get_username()
+    if not username:
+        return redirect(url_for("login"))
+        
+    if request.method == "GET":
+        return render_template("friends.html")
+    else:
+        return render_template("friends.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
