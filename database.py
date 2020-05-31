@@ -47,7 +47,6 @@ def testallfunctions():
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
-    print(confirmmeeting(1))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
     print(confirmmeeting("HTY", 2))
     print(confirmmeeting("NGMH", 2))
