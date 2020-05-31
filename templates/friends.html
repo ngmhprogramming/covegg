@@ -3,6 +3,7 @@
   {% include 'head.html' %}
   <body>
     {% include 'navbar.html' %}
+    {% include 'notifs.html' %}
 
 	  <div class="container">
       
@@ -41,7 +42,7 @@
               </td>
           </tr>
           {% else %}
-          no friend request
+          No friend requests found
           {% endfor %}
 
         </table>
@@ -62,11 +63,6 @@
           {% endfor %}
         </table>
       </div>
-
-      {% if status == 0 %}
-        <script type="text/javascript">alert("Invalid Username");</script>
-      {% endif %}
-      
 	  </div>
   </body>
 </html>
