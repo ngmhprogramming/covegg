@@ -4,4 +4,4 @@ salt = "verygoodproject"
 
 def hash(password):
     password += salt
-	return sha256(password.encode("utf-8")).hexdigest()
+    return sha256(password.encode("utf-8")).hexdigest()
