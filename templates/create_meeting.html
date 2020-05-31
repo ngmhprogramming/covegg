@@ -12,12 +12,17 @@
                     <form action="/create_meeting" method="POST">
                       <input type="text" name="user" value="{{ overlap[0] }}" hidden>
                       <input type="text" name="time" value="{{ overlap[1] }}" hidden>
-                        <input type=submit value="Create">
+                      <input type=submit value="Create">
                     </form>
                 </td>
             </tr>
             {% endfor %}
         </table>
+        Create Group Meeting
+        <form action="/create_meeting" method="POST">
+          <input type="text" name="usernames" placeholder="Commas separated usernames">
+          <input type=submit>
+        </form>
 	</div>
   </body>
 </html>
