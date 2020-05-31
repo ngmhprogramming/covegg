@@ -126,7 +126,7 @@ def requestfren(u1, u2):
         return 0
 
 
-def confirmfren(u2, u1, accepted):
+def confirmfren(u1, u2, accepted):
     ''' making friends pt. 2: someone else agrees to be friends, so both now are each other's friends
     input: username of someone else, username of requester, accepted or rejected (1 or 0)
     output: 1 (success) or 0 (failure)'''
@@ -150,17 +150,14 @@ def confirmfren(u2, u1, accepted):
             cursorObj.execute("UPDATE users SET friends = '" +
                               friends + "' where username = '" + u1 + "'")
 
-        # u2 is the potentia friend!!
-        # u1 is the requester
         cursorObj.execute(
-            "SELECT pfriends FROM users where username = '" + u1 + "'")
+            "SELECT pfriends FROM users where username = '" + u2 + "'")
         pfriends = cursorObj.fetchall()[0][0]
         if u2 in pfriends:
-            pfriends = pfriends.replace("," + u2, "")
+            pfriends = pfriends.replace("," + u1, "")
 
-        # delete that entry in pfwens for the requester
         cursorObj.execute("UPDATE users SET pfriends = '" +
-                          pfriends + "' where username = '" + u1 + "'")
+                          pfriends + "' where username = '" + u2 + "'")
 
         con.commit()
         con.close()
