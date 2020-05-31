@@ -74,7 +74,11 @@ def parse_stime(num):
 def index():
     username = get_username()
     if username:
-        return render_template("index.html", username=username)
+        cmeetings = db.getconfirmedmeeting(username)
+        for i in range(len(cmeetings)):
+            cmeetings[i][2] = ", ".join(parse_time(cmeetings[i][2]))
+
+        return render_template("index.html", cmeetings=cmeetings, username=username)
     else:
         return render_template("index.html")
 
