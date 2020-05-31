@@ -11,7 +11,8 @@ def get_username():
 
 @app.route("/")
 def index():
-    username = get_username()
+    #username = get_username()
+    username = True
     if username:
         return render_template("index.html", username=username)
     else:
@@ -56,6 +57,19 @@ def profile():
         return render_template("profile.html")
     else:
         return render_template("profile.html")
+
+
+@app.route("/schedule")
+def schedule():
+    pass
+
+@app.route("/meet")
+def meet_new_ppl():
+    pass
+
+@app.route("/friends")
+def friend_groups():
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)
