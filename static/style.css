@@ -15,6 +15,26 @@
   padding: 1.2rem;
 }
 
+.main {
+  margin: 10px;
+  padding: 10px;
+}
+
+#login,
+#signup {
+  width: 20%;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#login form p,
+#login form input,
+#signup form p,
+#signup form input {
+  margin: 5px;
+}
+
 .whatever{
     background-color: white;
     border: solid 0.5px #DCDCDC;

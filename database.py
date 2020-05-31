@@ -92,7 +92,7 @@ def login(username, password):
         pw = cursorObj.fetchall()[0][0]
         con.close()
         return 1 if password == pw else 0
-    except Error as e:
+    except Exception as e:
         print(e)
         return 0
 

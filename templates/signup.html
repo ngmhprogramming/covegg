@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <body>
-	<div class="main">
-		<form action="/signup" method="POST">
-			Username <br> <input type="text" name="username" placeholder="Username" required><br>
-			Password <br> <input type="password" name="password" placeholder="Password" required><br>
-			Phone Number (e.g. 81234567) <br> <input type="tel" name="pnumber" placeholder="Phone Number" pattern="[0-9]{8}" required><br>
-			Email <br> <input type="email" name="email" placeholder="Email" required><br>
-			<input type="submit">
-		</form>
-	</div>
-  </body>
+	{% include 'head.html' %}
+	<body>
+	{% include 'navbar.html' %}
+	{% include 'notifs.html' %}
+		<div id="signup">
+			<form action="/signup" method="POST">
+				Username <br> <input type="text" name="username" placeholder="Username" required><br>
+				Password <br> <input type="password" name="password" placeholder="Password" required><br>
+				Phone Number (e.g. 81234567) <br> <input type="tel" name="pnumber" placeholder="Phone Number" pattern="[0-9]{8}" required><br>
+				Email <br> <input type="email" name="email" placeholder="Email" required><br>
+				<input type="submit" class="btn btn-outline-dark my-2 my-sm-0">
+			</form>
+		</div>
+  	</body>
 </html>
