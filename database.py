@@ -47,7 +47,9 @@ def testallfunctions():
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
-    print(confirmmeeting(1))
+    print(confirmmeeting("HTY", 1))
+    print(confirmmeeting("NGMH", 1))
+    print(cancelmeeting(1))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
     print(confirmmeeting("HTY", 2))
     print(confirmmeeting("NGMH", 2))
@@ -328,7 +330,7 @@ def creatependingmeeting(usernames, time):
             "INSERT INTO meet (users, time, messages, confirmed) VALUES('" + stryng + "','" + time + "','','" + stryng2 + "')")
         con.commit()
         cursorObj.execute(
-            "SELECT id FROM meet where users = '" + stryng + "' and time = '" + time + "'")
+            "SELECT last_insert_rowid()")
         id = cursorObj.fetchall()[0][0]
         for u in usernames:
             cursorObj.execute(
@@ -466,4 +468,4 @@ def getconfirmedmeeting(username):
         return 0
 
 
-# testallfunctions()
+testallfunctions()
