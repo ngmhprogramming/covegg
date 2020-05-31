@@ -36,7 +36,7 @@ def testallfunctions():
     print(login("HTY", "passworld123"))
     print(login("HTY", "password123"))
     print(requestfren("HTY", "NGMH"))
-    print(confirmfren("NGMH", "HTY", True))
+    print(confirmfren("HTY", "NGMH", True))
     print(getfren("NGMH"))
     print(getfren("HTY"))
     # print(deletfren("NGMH", "HTY"))
@@ -47,11 +47,11 @@ def testallfunctions():
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
     print(findoverlaps2(["HTY", "NGMH"]))
-    print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+    print(creatependingmeeting(["NGMH", "HTY"], 335))
     print(confirmmeeting("HTY", 1))
     print(confirmmeeting("NGMH", 1))
     print(cancelmeeting(1))
-    print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+    print(creatependingmeeting(["NGMH", "HTY"], 335))
     print(confirmmeeting("HTY", 2))
     print(confirmmeeting("NGMH", 2))
     print(getpendingmeeting("HTY"))
@@ -314,12 +314,13 @@ def findoverlaps2(usernames):
         return 0
 
 
-def creatependingmeeting(usernames, time):
+def creatependingmeeting(usernames, timeindex):
     '''
-    input: list of usernames, another giant binary string
+    input: list of usernames, and time index
     output: 1 (success) or 0 (failure)
     '''
     try:
+        time = "0" * timeindex + "1" + "0" * (336-timeindex)
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
         stryng = ",".join(usernames)
@@ -464,6 +465,7 @@ def getconfirmedmeeting(username):
     except Exception as e:
         print(e)
         return 0
+
 
 if __name__ == "__main__":
     testallfunctions()

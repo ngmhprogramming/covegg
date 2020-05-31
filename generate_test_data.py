@@ -13,6 +13,7 @@ def run():
 	register("HTY", 70707070, "lol@lol.com", "pp")
 	register("NGMH", 53180080, "imgay@lol.com", "pp")
 	register("nuode", 53181080, "imgay@lol.com", "pp")
+	register("Jeff", 53181080, "imgay@lol.com", "pp")
 
 	print(requestfren("HTY", "NGMH"))
 	#mun hin request to be tengyi's friend
@@ -30,9 +31,13 @@ def run():
 	confirmfren("NGMH", "nuode", True)
 
 	print(editschedule("nuode", "1"*10+"0"*325+"1"))
+	print(editschedule("Jeff", "0"*300+"1"*36))
 
-	print(getschedule("HTY"))
+	#print(getschedule("HTY"))
 	
+	print(requestfren("HTY", "Jeff"))
+
+
 	"""
 	print(getfren("NGMH"))
 	print(getfren("HTY"))
