@@ -25,6 +25,7 @@ def testallfunctions():
     con = sqlite3.connect('mydatabase.db')
     cursorObj = con.cursor()
     cursorObj.execute('drop table if exists users')
+    cursorObj.execute('drop table if exists meet')
     cursorObj.execute(
         "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
     cursorObj.execute(
@@ -40,9 +41,14 @@ def testallfunctions():
     print(confirmfren("NGMH", "HTY", True))
     print(getfren("NGMH"))
     print(getfren("HTY"))
-    print(deletfren("NGMH", "HTY"))
+    #print(deletfren("NGMH", "HTY"))
     print(getfren("NGMH"))
     print(getfren("HTY"))
+    s = "0"*335+"1"
+    print(editschedule("NGMH", s))
+    print(editschedule("HTY", s))
+    print(getschedule("HTY"))
+    print(findoverlaps("HTY"))
 
 
 def register(username, phone, email, password):
@@ -179,6 +185,23 @@ def getfren(username):
         return 0
 
 
+def getpfren(username):
+    ''' returns list of pending friend requests
+    input: username
+    output: list of pending friends'''
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        cursorObj.execute(
+            "SELECT pfriends FROM users where username = '" + username + "'")
+        pfrens = cursorObj.fetchall()[0][0].split(",")[1:]
+        con.close()
+        return pfrens
+    except Error:
+        print(Error)
+        return 0
+
+
 def editschedule(username, schedule):
     ''' if either side does not want to be friends they will not be friends lol
     input: username, schedule
@@ -189,6 +212,7 @@ def editschedule(username, schedule):
         cursorObj = con.cursor()
         cursorObj.execute("UPDATE users SET schedule = '" +
                           schedule + "' where username = '" + username + "'")
+        con.commit()
         con.close()
         return 1
     except Error as e:
@@ -196,7 +220,7 @@ def editschedule(username, schedule):
         return 0
 
 
-def getschedule():
+def getschedule(username):
     ''' returns schedule in binary string format for 1 wk (half hour blocks, 0 is busy and 1 is free time)
     input: username
     output: schedule as binary string'''
@@ -213,8 +237,35 @@ def getschedule():
         return 0
 
 
-def createmeeting(): return
+def findoverlaps(username):
+    '''find scheduling overlaps w all friends of a user
+    input: username
+    output: [(username, time), ...]
+    '''
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        cursorObj.execute(
+            "SELECT friends FROM users where username = '" + username + "'")
+        frens = cursorObj.fetchall()[0][0].split(",")[1:]
+        cursorObj.execute(
+            "SELECT schedule FROM users where username = '" + username + "'")
+        schedule = cursorObj.fetchall()[0][0]
+        lyst = []
+        for f in frens:
+            cursorObj.execute(
+                "SELECT schedule FROM users where username = '" + f + "'")
+            schedule2 = cursorObj.fetchall()[0][0]
+            for i in range(336):
+                if schedule2[i] == schedule[i] and int(schedule[i]):
+                    lyst.append((f, i))
+        return lyst
+    except Error as e:
+        print(e)
+        return 0
 
+
+def createmeeting(): return
 
 '''
     input: list of usernames, timeframe (number from 0 to 336)
