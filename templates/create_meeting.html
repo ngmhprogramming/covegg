@@ -5,30 +5,47 @@
   <body>
 	<div>
       {% include 'navbar.html' %}
-        <p>Your overlap in free times</p>
-        <table>
-            {% for overlap in range(olength) %}
-            <tr>
-                <td>{{ overs[overlap][0] }}</td>
-                <td>{{ overs[overlap][1] }}</td>
-                <td>
-                    <form action="/create_meeting" method="POST">
-                      <input type="text" name="user" value="{{ over[overlap][0] }}" hidden>
-                      <input type="text" name="time" value="{{ over[overlap][1] }}" hidden>
-                      <input type=submit value="Create">
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        Create Group Meeting
-        <form action="/create_meeting" method="POST">
-          <input type="text" name="usernames" placeholder="Commas separated usernames">
-          <input type=submit>
-        </form>
+        <div class="container">
+          <div class="row my-2">
+            <h1>Your overlap in free times</h1>
+          </div>
+          <table class="table">
+              {% for overlap in range(olength) %}
+              <tr>
+                  <td>{{ overs[overlap][0] }}</td>
+                  <td>{{ overs[overlap][1] }}</td>
+                  <td>
+                      <form action="/create_meeting" method="POST">
+                        <input type="text" name="user" value="{{ over[overlap][0] }}" hidden>
+                        <input type="text" name="time" value="{{ over[overlap][1] }}" hidden>
+                        <input type=submit value="Create" class="btn btn-primary mx-2">
+                      </form>
+                  </td>
+              </tr>
+              {% endfor %}
+          </table>
+        </div>
+        <div class="container">
+        <div class="row my-5">
+          
+          <div class="col-3">
+          <h1>Create group meeting</h1>
+          </div>
+          
+          <div class="col-5">
+          <form action="/create_meeting" method="POST">
+            <div class="form-group">
+            <input type="text" name="usernames" placeholder="Comma separated usernames" class="form-control"><br>
+            <input type=submit class="btn btn-primary mx-2">
+            </div>
+          </form>
+          </div>
+        </div>
         {% if gover %}
-        <p>Your group overlap in free times</p>
-        <table>
+        <div class="row my-2">
+          <h1>Your group overlap in free times</h1>
+        </div>  
+        <table class="table">
             {% for goverlap in range(glength) %}
             <tr>
                 <td>{{ govers[goverlap] }}</td>
@@ -36,7 +53,7 @@
                     <form action="/create_meeting" method="POST">
                       <input type="text" name="users" value="{{ users }}" hidden>
                       <input type="text" name="gtime" value="{{ gover[goverlap] }}" hidden>
-                      <input type=submit value="Create">
+                      <input type=submit value="Create" class="btn btn-primary mx-2">
                     </form>
                 </td>
             </tr>
