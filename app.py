@@ -29,7 +29,7 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         
-        if db.login(username, password):
+        if db.login(username, hash(password)):
             session["username"] = username
             return redirect(url_for("index"))
         return render_template("login.html", error="Invalid Username or Password")
@@ -97,10 +97,13 @@ def friends():
     if not username:
         return redirect(url_for("login"))
 
+    friendl = db.getfren(username)
     if request.method == "GET":
-        return render_template("friends.html")
+        return render_template("friends.html", friendl=friendl)
     else:
-        return render_template("friends.html")
+        friendreq = request.form["username"]
+        db.requestfren(username, friendreq)
+        return render_template("friends.html", friendl=friendl)
 
 if __name__ == "__main__":
     app.run(debug=True)
