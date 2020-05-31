@@ -9,6 +9,44 @@ def get_username():
     if "username" in session: return session["username"]
     return False
 
+get_bin = lambda x, n: format(x, 'b').zfill(n)
+
+def parse_time(string):
+    print(len(string))
+    day = 0
+    hour = 0
+    half = 0
+    prev = -1
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    times = []
+    for i in range(len(string)):
+        if i and i % 48 == 0: day += 1
+        if i and i % 2 == 0: hour += 1
+        hour %= 24
+        half += 1
+        half %= 2
+
+        if string[i] == '1':
+            time = ""
+            f = hour*100+half*30
+            f = str(f)
+            while len(f) < 4: f = "0"+f
+
+            if half:
+                s = (hour+1)*100
+            else:
+                s = hour*100+30
+            s = str(s)
+            while len(s) < 4: s = "0"+s
+
+            time = " "+f+"-"+s
+            if day != prev: time = days[day]+time
+            times.append(time)
+
+            prev = day
+    return times
+
+
 @app.route("/")
 def index():
     username = get_username()
@@ -106,11 +144,18 @@ def meetings():
 
     pmeetings = db.getpendingmeeting(username)
     cmeetings = db.getconfirmedmeeting(username)
+
+    for i in range(len(pmeetings)):
+        pmeetings[i][2] = ", ".join(parse_time(pmeetings[i][2]))
+
+    for i in range(len(cmeetings)):
+        cmeetings[i][2] = ", ".join(parse_time(cmeetings[i][2]))
+
     if request.method == "GET":
         return render_template("meetings.html", pmeetings=pmeetings, cmeetings=cmeetings, username=username)
     else:
         meetingid = request.form["meetingid"]
-        db.confirmmeeting(meetingid)
+        db.confirmmeeting(username, meetingid)
         return render_template("meetings.html", pmeetings=pmeetings, cmeetings=cmeetings, username=username)
 
 @app.route("/create_meeting", methods=["GET", "POST"])
@@ -120,13 +165,23 @@ def create_meeting():
         return redirect(url_for("login"))
 
     over = db.findoverlaps(username)
+    print("Hello",over)   
+    overs = []
+
+    for i in range(len(over)):
+        overs.append(list(over[i]))
+        bin = get_bin(over[i][1], 336)
+        print("hello2",bin)
+        overs[i][1] = ", ".join(parse_time(bin))
+    
     if request.method == "GET":
-        return render_template("create_meeting.html", over=over, username=username)
+        return render_template("create_meeting.html", over=overs, username=username)
     else:
         user = request.form["user"]
         time = request.form["time"]
+        
         db.creatependingmeeting([user], time)
-        return render_template("create_meeting.html", over=over, username=username)
+        return render_template("create_meeting.html", over=overs, username=username)
 
 
 @app.route("/friends", methods=["GET", "POST"])
@@ -138,21 +193,27 @@ def friends():
     friendl = db.getfren(username)
     rfriendl = db.getpfren(username)
     if request.method == "GET":
-        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, status = 1)
+        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username)
     else:
+        error = None
+
         if 'username' in request.form:
             friendreq = request.form["username"]
-            status = db.requestfren(username, friendreq)
+            if not db.requestfren(username, friendreq): error = "Cannot send friend request"
 
         else:
             friendreq = request.form["rusername"]
-            status = db.confirmfren(friendreq, username, True)
+            if not db.confirmfren(friendreq, username, True): error = "Cannot accept friend request"
        
         friendl = db.getfren(username)
         rfriendl = db.getpfren(username)
-        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, status = status)
+        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, error=error)
 
 #db.testallfunctions()
 
+
 if __name__ == "__main__":
+    import generate_test_data as gtd
+    gtd.run()
+
     app.run(debug=True)
