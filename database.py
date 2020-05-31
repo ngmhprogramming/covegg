@@ -52,12 +52,12 @@ def testallfunctions():
     print(confirmmeeting(2))
     print(getpendingmeeting("HTY"))
     print(getconfirmedmeeting("HTY"))
-    cursorObj.execute('drop table if exists users')
-    cursorObj.execute('drop table if exists meet')
-    cursorObj.execute(
-        "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
-    cursorObj.execute(
-        "CREATE TABLE meet(id integer PRIMARY KEY autoincrement, users text, time text, messages text, confirmed integer)")
+    #cursorObj.execute('drop table if exists users')
+    #cursorObj.execute('drop table if exists meet')
+    # cursorObj.execute(
+    # "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
+    # cursorObj.execute(
+    # "CREATE TABLE meet(id integer PRIMARY KEY autoincrement, users text, time text, messages text, confirmed integer)")
     con.commit()
     con.close()
 
