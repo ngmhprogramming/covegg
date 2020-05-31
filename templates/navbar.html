@@ -24,15 +24,20 @@
       <li class="nav-item">
         <a class="nav-link" href="/friends">My friend groups</a>
       </li>
+      {% if username %}
       <li class="nav-item">
-        <a class="nav-link" href="/profile">Profile</a>
+        <a class="nav-link" href="/profile">{{ username }}</a>
       </li>
-      
+      {% endif %}
       
     </ul>
     
     <div class="my-2 my-lg-0">
+      {% if username %}
+      <a class="btn btn-outline-dark my-2 my-sm-0" href="/logout">Logout</a>
+      {% else %}
       <a class="btn btn-outline-dark my-2 my-sm-0" href="/login">Login/Signup</a>
+      {% endif %}
     </form>
   </div>
 </nav>
