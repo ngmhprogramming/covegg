@@ -71,14 +71,6 @@ def meet_new_ppl():
 def friend_groups():
     pass
 
-@app.route("/profile")
-def profile():
-    pass
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
 if __name__ == "__main__":
     app.run(debug=True)
 
