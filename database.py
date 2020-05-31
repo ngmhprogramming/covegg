@@ -46,7 +46,11 @@ def testallfunctions():
     print(editschedule("HTY", "0"*335+"1"))
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
+    print(findoverlaps2(["HTY", "NGMH"]))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+    print(confirmmeeting("HTY", 1))
+    print(confirmmeeting("NGMH", 1))
+    print(cancelmeeting(1))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
     print(confirmmeeting("HTY", 2))
     print(confirmmeeting("NGMH", 2))
@@ -291,23 +295,19 @@ def findoverlaps(username):
 
 
 def findoverlaps2(usernames):
-    '''find scheduling overlaps w all friends of a user
-    input: list of usernames
-    output: [(username, time), ...]
-    '''
     try:
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
         schedules = []
         for u in usernames:
             cursorObj.execute(
-                "SELECT schedule FROM users where username = '" + username + "'")
+                "SELECT schedule FROM users where username = '" + u + "'")
             schedules.append(cursorObj.fetchall()[0][0])
-
+        lyst = []
         for i in range(336):
-            if 0 not in [schedule[i] for schedule in schedules]:
+            if '0' not in [schedule[i] for schedule in schedules]:
                 lyst.append(i)
-        return i
+        return lyst
     except Exception as e:
         print(e)
         return 0
@@ -327,7 +327,7 @@ def creatependingmeeting(usernames, time):
             "INSERT INTO meet (users, time, messages, confirmed) VALUES('" + stryng + "','" + time + "','','" + stryng2 + "')")
         con.commit()
         cursorObj.execute(
-            "SELECT id FROM meet where users = '" + stryng + "' and time = '" + time + "'")
+            "SELECT last_insert_rowid()")
         id = cursorObj.fetchall()[0][0]
         for u in usernames:
             cursorObj.execute(
@@ -465,4 +465,4 @@ def getconfirmedmeeting(username):
         return 0
 
 
-# testallfunctions()
+testallfunctions()
