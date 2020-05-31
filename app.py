@@ -104,10 +104,8 @@ def meetings():
     if not username:
         return redirect(url_for("login"))
 
-    #pmeetings = db.getpendingmeeting(username)
-    #cmeetings = db.getconfirmedmeeting(username)
-    pmeetings = [["1", ["a", "b"], "0am"], ["2", ["c", "d"], "1am"]]
-    cmeetings = [["3", ["a", "b"], "0am"], ["4", ["c", "d"], "1am"]]
+    pmeetings = db.getpendingmeeting(username)
+    cmeetings = db.getconfirmedmeeting(username)
     if request.method == "GET":
         return render_template("meetings.html", pmeetings=pmeetings, cmeetings=cmeetings, username=username)
     else:
@@ -121,15 +119,15 @@ def create_meeting():
     if not username:
         return redirect(url_for("login"))
 
-    #over = db.findoverlaps(username)
-    over = [["a", "1am"], ["b", "2am"], ["c", "3am"]]
+    over = db.findoverlaps(username)
     if request.method == "GET":
         return render_template("create_meeting.html", over=over, username=username)
     else:
         user = request.form["user"]
         time = request.form["time"]
-        #db.creatependingmeeting(user, time)
+        db.creatependingmeeting([user], time)
         return render_template("create_meeting.html", over=over, username=username)
+
 
 @app.route("/friends", methods=["GET", "POST"])
 def friends():
@@ -140,16 +138,21 @@ def friends():
     friendl = db.getfren(username)
     rfriendl = db.getpfren(username)
     if request.method == "GET":
-        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username)
+        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, status = 1)
     else:
         if 'username' in request.form:
             friendreq = request.form["username"]
-            db.requestfren(username, friendreq)
+            status = db.requestfren(username, friendreq)
+
         else:
             friendreq = request.form["rusername"]
-            db.confirmfren(friendreq, username, True)
-        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username)
+            status = db.confirmfren(friendreq, username, True)
+       
+        friendl = db.getfren(username)
+        rfriendl = db.getpfren(username)
+        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, status = status)
 
 db.testallfunctions()
+
 if __name__ == "__main__":
     app.run(debug=True)

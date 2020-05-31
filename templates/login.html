@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
-  <body>
-	<div class="main">
+	{% include 'head.html' %}
+	<body>
+	{% include 'navbar.html' %}
+  	{% include 'notifs.html' %}
+	<div id="login">
+		<p>Don't have an account? Sign up <a href="/signup">here</a></p>
 		<form action="/login" method="POST">
-			Username <input type="text" name="username" placeholder="Username" required><br>
-			Password <input type="password" name="password" placeholder="Password" required><br>
-			<input type="submit">
+			<p>Username</p><input type="text" name="username" placeholder="Username" required><br>
+			<p>Password</p><input type="password" name="password" placeholder="Password" required><br>
+			<input type="submit" class="btn btn-outline-dark my-2 my-sm-0">
 		</form>
 	</div>
   </body>
-</html>
+</html> 
