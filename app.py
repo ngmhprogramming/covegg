@@ -108,16 +108,15 @@ def friends():
     friendl = db.getfren(username)
     rfriendl = db.getpfren(username)
     if request.method == "GET":
-        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl)
+        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username)
     else:
         if 'username' in request.form:
             friendreq = request.form["username"]
-            #db.requestfren(username, friendreq)
-            db.requestfren(friendreq, username)
+            db.requestfren(username, friendreq)
         else:
             friendreq = request.form["rusername"]
             db.confirmfren(friendreq, username, True)
-        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl)
+        return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username)
 
 db.testallfunctions()
 if __name__ == "__main__":
