@@ -282,4 +282,4 @@ def cancelmeeting(): return
 def msgmeeting(): return
 
 
-testallfunctions()
+# testallfunctions()
