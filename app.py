@@ -165,12 +165,13 @@ def create_meeting():
         return redirect(url_for("login"))
 
     over = db.findoverlaps(username)
+    print("Hello",over)   
     overs = []
 
     for i in range(len(over)):
         overs.append(list(over[i]))
         bin = get_bin(over[i][1], 336)
-        print(bin)
+        print("hello2",bin)
         overs[i][1] = ", ".join(parse_time(bin))
     
     if request.method == "GET":
@@ -208,7 +209,11 @@ def friends():
         rfriendl = db.getpfren(username)
         return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, error=error)
 
-db.testallfunctions()
+#db.testallfunctions()
+
 
 if __name__ == "__main__":
+    import generate_test_data as gtd
+    gtd.run()
+
     app.run(debug=True)

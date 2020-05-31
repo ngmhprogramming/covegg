@@ -465,5 +465,5 @@ def getconfirmedmeeting(username):
         print(e)
         return 0
 
-
-testallfunctions()
+if __name__ == "__main__":
+    testallfunctions()
