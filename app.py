@@ -75,8 +75,10 @@ def index():
     username = get_username()
     if username:
         cmeetings = db.getconfirmedmeeting(username)
-        for i in range(len(cmeetings)):
-            cmeetings[i][2] = ", ".join(parse_time(cmeetings[i][2]))
+
+        if cmeetings != 0:
+            for i in range(len(cmeetings)):
+                cmeetings[i][2] = ", ".join(parse_time(cmeetings[i][2]))
 
         return render_template("index.html", cmeetings=cmeetings, username=username)
     else:
@@ -172,11 +174,13 @@ def meetings():
     pmeetings = db.getpendingmeeting(username)
     cmeetings = db.getconfirmedmeeting(username)
 
-    for i in range(len(pmeetings)):
-        pmeetings[i][2] = ", ".join(parse_time(pmeetings[i][2]))
+    if pmeetings != 0:
+        for i in range(len(pmeetings)):
+            pmeetings[i][2] = ", ".join(parse_time(pmeetings[i][2]))
 
-    for i in range(len(cmeetings)):
-        cmeetings[i][2] = ", ".join(parse_time(cmeetings[i][2]))
+    if cmeetings != 0:
+        for i in range(len(cmeetings)):
+            cmeetings[i][2] = ", ".join(parse_time(cmeetings[i][2]))
 
     if request.method == "GET":
         return render_template("meetings.html", pmeetings=pmeetings, cmeetings=cmeetings, username=username)
@@ -192,6 +196,9 @@ def create_meeting():
         return redirect(url_for("login"))
 
     over = db.findoverlaps(username)
+    if over == 0:
+        return render_template("create_meeting.html", olength=0, username=username)
+
     overs = []
     for i in range(len(over)):
         overs.append(list(over[i]))

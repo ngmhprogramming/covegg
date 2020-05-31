@@ -5,6 +5,7 @@
 		{% include 'navbar.html' %}
 		{% if username %}
 		<div class="container">
+			{% if cmeetings %}
 			<div class="row my-2">
 				<h3>Your upcoming meetings</h3>
 			</div>
@@ -23,9 +24,14 @@
 					{% endfor %}
 				</table>
 			</div>
+			{% else %}
+			<div class="row my-2">
+				<h3>Your have no upcoming meetings</h3>
+			</div>
+			{% endif %}
 		</div>
-		{% endif %}
 		<hr>
+		{% endif %}
 		<div class="container">
 			<div class="row my-2">
 				<h1>CovEgg</h1>

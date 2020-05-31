@@ -5,6 +5,7 @@
     {% include 'navbar.html' %}
     {% include 'notifs.html' %}
 	<div class="container">
+        {% if pmeetings != 0%}
         <div class="row my-2">
           <h3>Your pending meetings</h3>
         </div>
@@ -29,7 +30,13 @@
                 {% endfor %}
             </table>
         </div>
+        {% else %}
+        <div class="row my-2">
+            <h3>Your have no pending meetings</h3>
+        </div>
+        {% endif %}
         <br>
+        {% if cmeetings %}
         <div class="row my-2">
           <h3>Your confirmed meetings</h3>
         </div>
@@ -48,6 +55,11 @@
                 {% endfor %}
             </table>
         </div>
-	</div>
+        {% else %}
+        <div class="row my-2">
+            <h3>Your have no confirmed meetings</h3>
+        </div>
+        {% endif %}
+    </div>
   </body>
 </html>

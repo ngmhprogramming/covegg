@@ -6,6 +6,7 @@
 	<div>
       {% include 'navbar.html' %}
         <div class="container">
+          {% if olength != 0 %}
           <div class="row my-2">
             <h1>Your overlap in free times</h1>
           </div>
@@ -24,6 +25,11 @@
               </tr>
               {% endfor %}
           </table>
+        {% else %}
+        <div class="row my-2">
+          <h2>Unfortunately, there is nobody who shares free time with you</h2>
+        </div>  
+        {% endif %}
         </div>
         <div class="container">
         <div class="row my-5">
@@ -59,6 +65,10 @@
             </tr>
             {% endfor %}
         </table>
+        {% elif users %}
+        <div class="row my-2">
+          <h2>Unfortunately, there is no free time for everyone to meet</h2>
+        </div>  
         {% endif %}
 	</div>
   </body>
