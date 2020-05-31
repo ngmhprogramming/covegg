@@ -152,7 +152,7 @@ def friends():
         rfriendl = db.getpfren(username)
         return render_template("friends.html", friendl=friendl, rfriendl=rfriendl, username=username, status = status)
 
-db.testallfunctions()
+#db.testallfunctions()
 
 if __name__ == "__main__":
     app.run(debug=True)
