@@ -153,7 +153,7 @@ def confirmfren(u1, u2, accepted):
         cursorObj.execute(
             "SELECT pfriends FROM users where username = '" + u2 + "'")
         pfriends = cursorObj.fetchall()[0][0]
-        if u2 in pfriends:
+        if u1 in pfriends:
             pfriends = pfriends.replace("," + u1, "")
 
         cursorObj.execute("UPDATE users SET pfriends = '" +
@@ -320,11 +320,14 @@ def creatependingmeeting(usernames, timeindex):
     output: 1 (success) or 0 (failure)
     '''
     try:
-        time = "0" * timeindex + "1" + "0" * (336-timeindex)
+        time = "0" * int(timeindex) + "1" + "0" * (336-int(timeindex))
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
+        
         stryng = ",".join(usernames)
         stryng2 = "0"*len(usernames)
+        
+
         cursorObj.execute(
             "INSERT INTO meet (users, time, messages, confirmed) VALUES('" + stryng + "','" + time + "','','" + stryng2 + "')")
         con.commit()
@@ -340,7 +343,7 @@ def creatependingmeeting(usernames, timeindex):
         con.commit()
         con.close()
         return 1
-    except Exception as e:
+    except Error as e:
         print(e)
         return 0
 
@@ -434,11 +437,14 @@ def getpendingmeeting(username):
             if ans:
                 meetings.append(ans[0])
         final = []
+        
+        print(meetings)
+        
         for meeting in meetings:
-            if "0" in meeting[4]:
+            if meeting[4] == 0:
                 final.append([meeting[0], meeting[1].split(","), meeting[2]])
         return final
-    except Exception as e:
+    except Error as e:
         print(e)
         return 0
 
@@ -459,10 +465,10 @@ def getconfirmedmeeting(username):
                 meetings.append(ans[0])
         final = []
         for meeting in meetings:
-            if "0" not in meeting[4]:
+            if meeting[4] == 0:
                 final.append([meeting[0], meeting[1].split(","), meeting[2]])
         return final
-    except Exception as e:
+    except Error as e:
         print(e)
         return 0
 

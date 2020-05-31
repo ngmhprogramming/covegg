@@ -168,6 +168,8 @@ def meetings():
     pmeetings = db.getpendingmeeting(username)
     cmeetings = db.getconfirmedmeeting(username)
 
+    print("Pmetings",pmeetings)
+
     for i in range(len(pmeetings)):
         pmeetings[i][2] = ", ".join(parse_time(pmeetings[i][2]))
 
@@ -200,7 +202,9 @@ def create_meeting():
         if "user" in request.form:
             user = request.form["user"]
             time = request.form["time"]
-            db.creatependingmeeting([user], time)
+            print("hello")
+            db.creatependingmeeting([user,username], time)
+            print("hello2")
             return render_template("create_meeting.html", overs=overs, over=over, olength=olength, username=username)
         else:
             if "users" in request.form:
@@ -245,11 +249,11 @@ def friends():
 
         if 'username' in request.form:
             friendreq = request.form["username"]
-            if not db.requestfren(username, friendreq): error = "Cannot send friend request"
+            if not db.requestfren(username, friendreq): error = "Cannot send friend request" #POV requester
 
         else:
             friendreq = request.form["rusername"]
-            if not db.confirmfren(friendreq, username, True): error = "Cannot accept friend request"
+            if not db.confirmfren(friendreq, username, True): error = "Cannot accept friend request" #POV acceptor
        
         friendl = db.getfren(username)
         rfriendl = db.getpfren(username)

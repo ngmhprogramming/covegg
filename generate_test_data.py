@@ -15,50 +15,34 @@ def run():
 	register("nuode", 53181080, "imgay@lol.com", "pp")
 	register("Jeff", 53181080, "imgay@lol.com", "pp")
 
-	print(requestfren("HTY", "NGMH"))
-	#mun hin request to be tengyi's friend
-
-	#teng yi accepts munhun's friend request
-	print(confirmfren("HTY", "NGMH", True))
-
-	print(editschedule("NGMH", "0"*335+"1"))
-	print(editschedule("HTY", "0"*335+"1"))
-
-	requestfren("HTY", "nuode")
-	requestfren("NGMH", "nuode")
-
-	confirmfren("HTY", "nuode", True)
-	confirmfren("NGMH", "nuode", True)
-
-	print(editschedule("nuode", "1"*10+"0"*325+"1"))
-	print(editschedule("Jeff", "0"*300+"1"*36))
-
-	#print(getschedule("HTY"))
+	print(requestfren("HTY", "NGMH")) #hty request to ngmh, friend request should show on ngmh
+	print(confirmfren("HTY", "NGMH", True)) #ngmh accept the friendrequest
 	
-	print(requestfren("HTY", "Jeff"))
+	print(requestfren("nuode", "NGMH")) #hty request to ngmh, friend request should show on ngmh
+	print(confirmfren("nuode", "NGMH", True)) #ngmh accept the friendrequest
+	
+	print(requestfren("Jeff", "NGMH")) #hty request to ngmh, friend request should show on ngmh
+
+	print(editschedule("NGMH", "0"*334+"11"))
+	print(editschedule("HTY", "0"*334+"11"))
+	print(editschedule("Jeff", "0"*324+"1"*12))
+	print(editschedule("nuode", "0"*333+"111"))
 
 
 	"""
-	print(getfren("NGMH"))
-	print(getfren("HTY"))
-
-	# print(deletfren("NGMH", "HTY"))
-	# print(getfren("NGMH"))
-	# print(getfren("HTY"))
-
 	print(getschedule("HTY"))
 	print(findoverlaps("HTY"))
-	print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+	print(findoverlaps2(["HTY", "NGMH"]))
+	print(creatependingmeeting(["NGMH", "HTY"], 335))
 	print(confirmmeeting("HTY", 1))
 	print(confirmmeeting("NGMH", 1))
 	print(cancelmeeting(1))
-	print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+	print(creatependingmeeting(["NGMH", "HTY"], 335))
 	print(confirmmeeting("HTY", 2))
 	print(confirmmeeting("NGMH", 2))
 	print(getpendingmeeting("HTY"))
 	print(getconfirmedmeeting("HTY"))
 	"""
-
 
 	con.commit()
 	con.close()
