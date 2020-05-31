@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, request
 from hash import *
-from database import *
+import database as db
 
 app = Flask(__name__)
 app.secret_key = "shellshock69420"
@@ -29,7 +29,7 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         
-        if login(username, password):
+        if db.login(username, password):
             session["username"] = username
             return redirect(url_for("index"))
         return render_template("login.html", error="Invalid Username or Password")
@@ -54,7 +54,7 @@ def signup():
         email = request.form["email"]
 
         password = hash(password)
-        if register(username, pnumber, email, password):
+        if db.register(username, pnumber, email, password):
             return redirect(url_for("login"))
         return render_template("signup.html", error="Username taken!")
 
