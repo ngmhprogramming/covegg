@@ -30,8 +30,12 @@
 }
 
 #checkboxes input[type=checkbox]:checked + .whatever {
+    background-color: #ffcc5f;
+    border: solid 0.5px #ffcc5f;
+}
+
+#checkboxes input[type=checkbox]:hover + .whatever {
     background-color: #ffefae;
-    border: solid 0.5px black;
 }
 
 .timelabel {

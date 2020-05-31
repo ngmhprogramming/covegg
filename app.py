@@ -83,9 +83,19 @@ def schedule():
     pmhourlist = ["1200-1230","1230-1300","1300-1330","1330-1400","1400-1430","1430-1500","1500-1530","1530-1600","1600-1630","1630-1700","1700-1730","1730-1800","1800-1830","1830-1900","1900-1930","1930-2000","2000-2030","2030-2100","2100-2130","2130-2200","2200-2230","2230-2300","2300-2330","2330-0000"]
 
     if request.method == "GET":  
-        return render_template("schedule.html",days = days, amhourlist = amhourlist, pmhourlist = pmhourlist)
+        schedule_string = db.getschedule(username)
+        return render_template("schedule.html",days = days, amhourlist = amhourlist, pmhourlist = pmhourlist,schedule_string = schedule_string)
     else:
-        return render_template("schedule.html",days = days, amhourlist = amhourlist, pmhourlist = pmhourlist)
+        #post
+        sched_data = request.form.getlist('scheduledata')
+    
+        s = ["0" for i in range(336)]
+        for item in sched_data:
+            s[int(item)] = "1"
+        s = "".join(s)
+        
+        db.editschedule(username,s)
+        return render_template("schedule.html",days = days, amhourlist = amhourlist, pmhourlist = pmhourlist,schedule_string =s)
 
 @app.route("/meetings", methods=["GET", "POST"])
 def meetings():
