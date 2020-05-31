@@ -9,24 +9,28 @@ from sqlite3 import Error
 - Password
 - Schedule
 - Friends
-- Pending friends
+- Pending Friends
+- Meetups (IDs)
 
-Adding soon: requests and chats
+* Meet Table
+- ID
+- Users involved in meeting
+- Time Period
+- Messages
+- Pending or Not
 '''
-
-con = sqlite3.connect('mydatabase.db')
-cursorObj = con.cursor()
-
-
-def setup():
-    cursorObj.execute(
-        "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text)")
-    con.commit()
 
 
 def testallfunctions():
+    con = sqlite3.connect('mydatabase.db')
+    cursorObj = con.cursor()
     cursorObj.execute('drop table if exists users')
-    setup()
+    cursorObj.execute(
+        "CREATE TABLE users(username text PRIMARY KEY, phone integer, email text, password text, schedule text, friends text, pfriends text, meetings text)")
+    cursorObj.execute(
+        "CREATE TABLE meet(id text PRIMARY KEY, users text, time text, messages text, confirmed integer)")
+    con.commit()
+    con.close()
     print(register("HTY", 70707070, "lol@lol.com", "passworld123"))
     print(register("NGMH", 53180080, "imgay@lol.com", "iloverubikcube"))
     print(register("HTY", 70707070, "lol@lol.com", "passworld123"))
@@ -46,27 +50,33 @@ def register(username, phone, email, password):
     input: username(must be unique, rest don't need to be for now), phone number, email, password
     output: 1 (success) or 0 (failure)'''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         schedule = "0" * 336
         cursorObj.execute(
-            "INSERT INTO users VALUES('" + username + "'," + str(phone) + ",'" + email + "','" + password + "','" + schedule + "','','')")
+            "INSERT INTO users VALUES('" + username + "'," + str(phone) + ",'" + email + "','" + password + "','" + schedule + "','','','')")
         con.commit()
+        con.close()
         return 1
-    except Error:
-        print(Error)
+    except Error as e:
+        print(e)
         return 0
 
 
 def login(username, password):
     '''check password
-    input: username(must be unique, rest don't need to be for now), password
+    input: username, password
     output: 1 (success) or 0 (failure)'''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         cursorObj.execute(
             "SELECT password FROM users where username = '" + username + "'")
         pw = cursorObj.fetchall()[0][0]
+        con.close()
         return 1 if password == pw else 0
-    except Error:
-        print(Error)
+    except Error as e:
+        print(e)
         return 0
 
 
@@ -75,6 +85,8 @@ def requestfren(u1, u2):
     input: username of requester, username of someone else
     output: 1 (success) or 0 (failure)'''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         cursorObj.execute(
             "SELECT pfriends FROM users where username = '" + u2 + "'")
         pfriends = cursorObj.fetchall()[0][0]
@@ -83,9 +95,10 @@ def requestfren(u1, u2):
         cursorObj.execute("UPDATE users SET pfriends = '" +
                           pfriends + "' where username = '" + u2 + "'")
         con.commit()
+        con.close()
         return 1
-    except Error:
-        print(Error)
+    except Error as e:
+        print(e)
         return 0
 
 
@@ -94,6 +107,8 @@ def confirmfren(u2, u1, accepted):
     input: username of someone else, username of requester, accepted or rejected (1 or 0)
     output: 1 (success) or 0 (failure)'''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         if accepted:
             cursorObj.execute(
                 "SELECT friends FROM users where username = '" + u2 + "'")
@@ -113,9 +128,10 @@ def confirmfren(u2, u1, accepted):
             pfriends = pfriends.replace("," + u1, "")
 
         con.commit()
+        con.close()
         return 1
-    except Error:
-        print(Error)
+    except Error as e:
+        print(e)
         return 0
 
 
@@ -124,6 +140,8 @@ def deletfren(u1, u2):
     input: 2 usernames
     output: 1 (success) or 0 (failure)'''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         cursorObj.execute(
             "SELECT friends FROM users where username = '" + u2 + "'")
         friends = cursorObj.fetchall()[0][0].replace("," + u1, "")
@@ -137,9 +155,10 @@ def deletfren(u1, u2):
                           friends + "' where username = '" + u1 + "'")
 
         con.commit()
+        con.close()
         return 1
-    except Error:
-        print(Error)
+    except Error as e:
+        print(e)
         return 0
 
 
@@ -148,9 +167,13 @@ def getfren(username):
     input: username
     output: list of friends'''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         cursorObj.execute(
             "SELECT friends FROM users where username = '" + username + "'")
-        return cursorObj.fetchall()[0][0].split(",")[1:]
+        frens = cursorObj.fetchall()[0][0].split(",")[1:]
+        con.close()
+        return frens
     except Error:
         print(Error)
         return 0
@@ -162,11 +185,14 @@ def editschedule(username, schedule):
     output: 1 (success) or 0 (failure)
     '''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         cursorObj.execute("UPDATE users SET schedule = '" +
                           schedule + "' where username = '" + username + "'")
+        con.close()
         return 1
-    except Error:
-        print(Error)
+    except Error as e:
+        print(e)
         return 0
 
 
@@ -175,12 +201,34 @@ def getschedule():
     input: username
     output: schedule as binary string'''
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
         cursorObj.execute(
             "SELECT schedule FROM users where username = '" + username + "'")
-        return cursorObj.fetchall()[0][0]
-    except Error:
-        print(Error)
+        sched = cursorObj.fetchall()[0][0]
+        con.close()
+        return sched
+    except Error as e:
+        print(e)
         return 0
 
 
-testallfunctions()
+def createmeeting(): return
+
+
+'''
+    input: list of usernames, timeframe (number from 0 to 336)
+    output: 1 (success) or 0 (failure)
+    '''
+
+
+def confirmmeeting(): return
+
+
+def cancelmeeting(): return
+
+
+def msgmeeting(): return
+
+
+# testallfunctions()
