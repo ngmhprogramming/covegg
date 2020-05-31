@@ -2,12 +2,23 @@
 <html>
   <body>
 	<div class="main">
-        Add a friend
+        <p>Add a friend</p>
 		<form action="/friends" method="POST">
-			Username <input type="text" name="username" placeholder="Username" required><br>
+			Username <input type="text" name="username" placeholder="Username"><br>
 			<input type="submit">
         </form>
-        Your friends
+        <p>Your friend requests</p>
+        {% for rfriend in rfriendl %}
+        <div>
+            <p>{{ rfriend }}</p>
+            <form action="/friends" method="POST">
+                <input type="text" name="rusername" value="{{ rfriend }}" hidden>
+                <input type=submit value="Accept">
+            </form>
+        </div>
+        {% endfor %}
+        <br>
+        <p>Your friends</p>
         {% for friend in friendl %}
         <p>{{ friend }}</p>
         {% endfor %}
