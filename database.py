@@ -425,7 +425,10 @@ def getpendingmeeting(username):
             ans = cursorObj.fetchall()
             if ans:
                 meetings.append(ans[0])
-        return meetings
+        final = []
+        for meeting in meetings:
+            final.append([meeting[0], meeting[1].split(","), meeting[2]])
+        return final
     except Error as e:
         print(e)
         return 0
@@ -446,10 +449,13 @@ def getconfirmedmeeting(username):
             ans = cursorObj.fetchall()
             if ans:
                 meetings.append(ans[0])
-        return meetings
+        final = []
+        for meeting in meetings:
+            final.append([meeting[0], meeting[1].split(","), meeting[2]])
+        return final
     except Error as e:
         print(e)
         return 0
 
 
-# testallfunctions()
+testallfunctions()
