@@ -119,14 +119,13 @@ def create_meeting():
     if not username:
         return redirect(url_for("login"))
 
-    #over = db.findoverlaps(username)
-    over = [["a", "1am"], ["b", "2am"], ["c", "3am"]]
+    over = db.findoverlaps(username)
     if request.method == "GET":
         return render_template("create_meeting.html", over=over, username=username)
     else:
         user = request.form["user"]
         time = request.form["time"]
-        #db.creatependingmeeting(user, time)
+        db.creatependingmeeting([user], time)
         return render_template("create_meeting.html", over=over, username=username)
 
 @app.route("/friends", methods=["GET", "POST"])
