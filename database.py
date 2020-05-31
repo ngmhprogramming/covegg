@@ -47,9 +47,11 @@ def testallfunctions():
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
-    print(confirmmeeting(1))
-    print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
     print(cancelmeeting(1))
+    print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
+    print(confirmmeeting(2))
+    print(getpendingmeeting("HTY"))
+    print(getconfirmedmeeting("HTY"))
     cursorObj.execute('drop table if exists users')
     cursorObj.execute('drop table if exists meet')
     cursorObj.execute(
@@ -122,7 +124,7 @@ def requestfren(u1, u2):
 
 def confirmfren(u2, u1, accepted):
     ''' making friends pt. 2: someone else agrees to be friends, so both now are each other's friends
-    input: username of someone else, username of requester, accepted or rejected (1 or 0)
+    input: username of someone else, username of requester, accepted or rejected(1 or 0)
     output: 1 (success) or 0 (failure)'''
     try:
         con = sqlite3.connect('mydatabase.db')
@@ -233,7 +235,7 @@ def editschedule(username, schedule):
 
 
 def getschedule(username):
-    ''' returns schedule in binary string format for 1 wk (half hour blocks, 0 is busy and 1 is free time)
+    ''' returns schedule in binary string format for 1 wk(half hour blocks, 0 is busy and 1 is free time)
     input: username
     output: schedule as binary string'''
     try:
@@ -333,6 +335,17 @@ def cancelmeeting(id):
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
         cursorObj.execute(
+            "SELECT users FROM meet where id = " + str(id))
+        users = cursorObj.fetchall()[0][0]
+        for user in users.split(","):
+            cursorObj.execute(
+                "SELECT meetings FROM users where username = '" + user + "'")
+            meetings = cursorObj.fetchall()[0][0].split(",")[1:]
+            meetings.remove(str(id))
+            meetings = ",".join(meetings)
+            cursorObj.execute(
+                "UPDATE users SET meetings = '" + meetings+"' where username = '" + user + "'")
+        cursorObj.execute(
             "DELETE FROM meet where id = " + str(id))
         con.commit()
         con.close()
@@ -344,9 +357,15 @@ def cancelmeeting(id):
 
 def addmeetingmsg(id, username, message):
     try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        message = message.replace(",", "")
+        message = message.replace(":", "")
         cursorObj.execute(
-            "SELECT messages FROM meet where id =" + id + "'")
+            "SELECT messages FROM meet where id =" + id)
         messages = cursorObj.fetchall()[0][0]+","+username+":"+message
+        cursorObj.execute(
+            "UPDATE meet SET messages ='" + messages + "' where id = " + str(id))
         con.commit()
         con.close()
     except Error as e:
@@ -354,13 +373,60 @@ def addmeetingmsg(id, username, message):
         return 0
 
 
-def getmeetingmsg(id, username): return
+def getmeetingmsg(id):
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        cursorObj.execute(
+            "SELECT messages FROM meet where id =" + id)
+        messages = cursorObj.fetchall()[0][0]+","+username+":"+message
+        return [i.split(":") for i in messages.split(",")]
+        con.close()
+    except Error as e:
+        print(e)
+        return 0
 
 
-def getpendingmeeting(username): return
+def getpendingmeeting(username):
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        meetings = []
+        cursorObj.execute(
+            "SELECT meetings FROM users where username ='" + username + "'")
+        a = cursorObj.fetchall()[0][0]
+        print(a.split(",")[1:])
+        for id in a.split(",")[1:]:
+            cursorObj.execute(
+                "SELECT * FROM meet where confirmed = 0 and id =" + id)
+            ans = cursorObj.fetchall()
+            if ans:
+                meetings.append(ans[0])
+        return meetings
+    except Error as e:
+        print(e)
+        return 0
 
 
-def getconfirmedmeeting(username): return
+def getconfirmedmeeting(username):
+    try:
+        con = sqlite3.connect('mydatabase.db')
+        cursorObj = con.cursor()
+        meetings = []
+        cursorObj.execute(
+            "SELECT meetings FROM users where username ='" + username + "'")
+        a = cursorObj.fetchall()[0][0]
+        print(a.split(",")[1:])
+        for id in a.split(",")[1:]:
+            cursorObj.execute(
+                "SELECT * FROM meet where confirmed = 1 and id =" + id)
+            ans = cursorObj.fetchall()
+            if ans:
+                meetings.append(ans[0])
+        return meetings
+    except Error as e:
+        print(e)
+        return 0
 
 
 # testallfunctions()
