@@ -10,7 +10,8 @@
                 <td>{{ overlap[1] }}</td>
                 <td>
                     <form action="/create_meeting" method="POST">
-                        <input type="text" name="overlap" value="{{ overlap[0] }}" hidden>
+                      <input type="text" name="user" value="{{ overlap[0] }}" hidden>
+                      <input type="text" name="time" value="{{ overlap[1] }}" hidden>
                         <input type=submit value="Create">
                     </form>
                 </td>

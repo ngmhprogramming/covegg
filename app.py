@@ -115,6 +115,9 @@ def create_meeting():
     if request.method == "GET":
         return render_template("create_meeting.html", over=over, username=username)
     else:
+        user = request.form["user"]
+        time = request.form["time"]
+        #db.creatependingmeeting(user, time)
         return render_template("create_meeting.html", over=over, username=username)
 
 @app.route("/friends", methods=["GET", "POST"])
