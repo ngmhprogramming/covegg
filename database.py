@@ -42,10 +42,11 @@ def testallfunctions():
     # print(deletfren("NGMH", "HTY"))
     # print(getfren("NGMH"))
     # print(getfren("HTY"))
-    print(editschedule("NGMH", "0"*335+"1"))
-    print(editschedule("HTY", "0"*335+"1"))
+    print(editschedule("NGMH", "0"*334+"11"))
+    print(editschedule("HTY", "0"*334+"11"))
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
+    print(findoverlaps2(["HTY", "NGMH"]))
     print(creatependingmeeting(["NGMH", "HTY"], "0"*335+"1"))
     print(confirmmeeting("HTY", 1))
     print(confirmmeeting("NGMH", 1))
@@ -268,7 +269,7 @@ def getschedule(username):
 def findoverlaps(username):
     '''find scheduling overlaps w all friends of a user
     input: username
-    output: [(username, time), ...]
+    output: [(username, timeindex), ...]
     '''
     try:
         con = sqlite3.connect('mydatabase.db')
@@ -295,8 +296,8 @@ def findoverlaps(username):
 
 def findoverlaps2(usernames):
     '''find scheduling overlaps w all friends of a user
-    input: list of usernames
-    output: [(username, time), ...]
+    input: username
+    output: [timeindex, ...]
     '''
     try:
         con = sqlite3.connect('mydatabase.db')
@@ -304,13 +305,13 @@ def findoverlaps2(usernames):
         schedules = []
         for u in usernames:
             cursorObj.execute(
-                "SELECT schedule FROM users where username = '" + username + "'")
+                "SELECT schedule FROM users where username = '" + u + "'")
             schedules.append(cursorObj.fetchall()[0][0])
-
+        lyst = []
         for i in range(336):
-            if 0 not in [schedule[i] for schedule in schedules]:
+            if '0' not in [schedule[i] for schedule in schedules]:
                 lyst.append(i)
-        return i
+        return lyst
     except Exception as e:
         print(e)
         return 0
