@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
+{% include 'head.html' %}
+
   <body>
-	<div class="main">
+	<div>
+      {% include 'navbar.html' %}
         <p>Your overlap in free times</p>
         <table>
             {% for overlap in range(olength) %}

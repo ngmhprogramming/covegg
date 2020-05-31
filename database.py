@@ -42,8 +42,8 @@ def testallfunctions():
     # print(deletfren("NGMH", "HTY"))
     # print(getfren("NGMH"))
     # print(getfren("HTY"))
-    print(editschedule("NGMH", "0"*335+"1"))
-    print(editschedule("HTY", "0"*335+"1"))
+    print(editschedule("NGMH", "0"*334+"11"))
+    print(editschedule("HTY", "0"*334+"11"))
     print(getschedule("HTY"))
     print(findoverlaps("HTY"))
     print(findoverlaps2(["HTY", "NGMH"]))
@@ -269,7 +269,7 @@ def getschedule(username):
 def findoverlaps(username):
     '''find scheduling overlaps w all friends of a user
     input: username
-    output: [(username, time), ...]
+    output: [(username, timeindex), ...]
     '''
     try:
         con = sqlite3.connect('mydatabase.db')
@@ -295,6 +295,10 @@ def findoverlaps(username):
 
 
 def findoverlaps2(usernames):
+    '''find scheduling overlaps w all friends of a user
+    input: username
+    output: [timeindex, ...]
+    '''
     try:
         con = sqlite3.connect('mydatabase.db')
         cursorObj = con.cursor()
@@ -464,5 +468,5 @@ def getconfirmedmeeting(username):
         print(e)
         return 0
 
-
-testallfunctions()
+if __name__ == "__main__":
+    testallfunctions()
