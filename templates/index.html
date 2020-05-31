@@ -1,9 +1,45 @@
 <!DOCTYPE html>
 <html>
-
-{% include 'head.html' %}
-<body>
-	{% include 'navbar.html' %}
-</body>
-	
+	{% include 'head.html' %}
+	<body>
+		{% include 'navbar.html' %}
+		{% if username %}
+		<div class="container">
+			{% if cmeetings %}
+			<div class="row my-2">
+				<h3>Your upcoming meetings</h3>
+			</div>
+			<div class="row px-2 mb-5">
+				<table class="table">
+					{% for meeting in cmeetings %}
+					<tr>
+						<td>{{ meeting[0] }}</td>
+						<td>
+							{% for user in meeting[1] %}
+							{{ user }}
+							{% endfor %}
+						</td>
+						<td><p>{{ meeting[2] }}</p></td>
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
+			{% else %}
+			<div class="row my-2">
+				<h3>Your have no upcoming meetings</h3>
+			</div>
+			{% endif %}
+		</div>
+		<hr>
+		{% endif %}
+		<div class="container">
+			<div class="row my-2">
+				<h1>CovEgg</h1>
+			</div>
+			<div class="row my-2">
+				<p><h3>Easily organise meetings with your friends. <br>
+					No need to mess around with conflicting schedules anymore.</h3></p>
+			</div>
+		</div>
+	</body>
 </html>
