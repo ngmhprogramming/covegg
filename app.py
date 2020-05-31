@@ -1,4 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, request
+from hash import *
+from database import *
 
 app = Flask(__name__)
 app.secret_key = "shellshock69420"
@@ -23,12 +25,10 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         
-        #user = db_session.query(User).filter_by(name=name).first()
-        #if user is None or user.password != hash(password):
-        #    return render_template("login.html", error="Invalid Username or Password")
-
-        session["username"] = username
-        return redirect(url_for("index"))
+        if login():
+            session["username"] = username
+            return redirect(url_for("index"))
+        return render_template("login.html", error="Invalid Username or Password")
 
 @app.route("/logout")
 def logout():
@@ -46,10 +46,17 @@ def signup():
         email = request.form["email"]
 
         password = hash(password)
-        #user = User(type_no, location, name, password)
-        #db_session.add(user)
-        #db_session.commit()
-        return redirect(url_for("login"))
+        if register():
+            return redirect(url_for("login"))
+        return render_template("signup.html", error="Username taken!")
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    if request.method == "GET":
+        return render_template("profile.html")
+    else:
+        return render_template("profile.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
