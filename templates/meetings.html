@@ -15,7 +15,7 @@
                 <td><p>{{ meeting[2] }}</p></td>
                 <td>
                     <form action="/meetings" method="POST">
-                        <input type="text" name="meetingid" value="{ meeting[0] }}" hidden>
+                        <input type="text" name="meetingid" value="{{ meeting[0] }}" hidden>
                         <input type=submit value="Accept">
                     </form>
                 </td>

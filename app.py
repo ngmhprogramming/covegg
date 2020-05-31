@@ -100,6 +100,8 @@ def meetings():
     if request.method == "GET":
         return render_template("meetings.html", pmeetings=pmeetings, cmeetings=cmeetings, username=username)
     else:
+        meetingid = request.form["meetingid"]
+        db.confirmmeeting(meetingid)
         return render_template("meetings.html", pmeetings=pmeetings, cmeetings=cmeetings, username=username)
 
 @app.route("/create_meeting", methods=["GET", "POST"])
@@ -108,10 +110,12 @@ def create_meeting():
     if not username:
         return redirect(url_for("login"))
 
+    #over = db.findoverlaps(username)
+    over = [["a", "1am"], ["b", "2am"], ["c", "3am"]]
     if request.method == "GET":
-        return render_template("create_meeting.html", username=username)
+        return render_template("create_meeting.html", over=over, username=username)
     else:
-        return render_template("create_meeting.html", username=username)
+        return render_template("create_meeting.html", over=over, username=username)
 
 @app.route("/friends", methods=["GET", "POST"])
 def friends():
