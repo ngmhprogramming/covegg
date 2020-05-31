@@ -6,7 +6,11 @@
 		<form action="/friends" method="POST">
 			Username <input type="text" name="username" placeholder="Username" required><br>
 			<input type="submit">
-		</form>
+        </form>
+        Your friends
+        {% for friend in friendl %}
+        <p>{{ friend }}</p>
+        {% endfor %}
 	</div>
   </body>
 </html>

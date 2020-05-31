@@ -98,12 +98,15 @@ def friends():
         return redirect(url_for("login"))
 
     friendl = db.getfren(username)
+    print(friendl)
     if request.method == "GET":
         return render_template("friends.html", friendl=friendl)
     else:
         friendreq = request.form["username"]
         db.requestfren(username, friendreq)
+        print(db.confirmfren(friendreq, username, True))
         return render_template("friends.html", friendl=friendl)
 
+db.testallfunctions()
 if __name__ == "__main__":
     app.run(debug=True)

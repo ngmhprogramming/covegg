@@ -41,7 +41,7 @@ def testallfunctions():
     print(confirmfren("NGMH", "HTY", True))
     print(getfren("NGMH"))
     print(getfren("HTY"))
-    #print(deletfren("NGMH", "HTY"))
+    print(deletfren("NGMH", "HTY"))
     print(getfren("NGMH"))
     print(getfren("HTY"))
     s = "0"*335+"1"
