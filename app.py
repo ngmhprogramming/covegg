@@ -104,10 +104,8 @@ def meetings():
     if not username:
         return redirect(url_for("login"))
 
-    #pmeetings = db.getpendingmeeting(username)
-    #cmeetings = db.getconfirmedmeeting(username)
-    pmeetings = [["1", ["a", "b"], "0am"], ["2", ["c", "d"], "1am"]]
-    cmeetings = [["3", ["a", "b"], "0am"], ["4", ["c", "d"], "1am"]]
+    pmeetings = db.getpendingmeeting(username)
+    cmeetings = db.getconfirmedmeeting(username)
     if request.method == "GET":
         return render_template("meetings.html", pmeetings=pmeetings, cmeetings=cmeetings, username=username)
     else:
